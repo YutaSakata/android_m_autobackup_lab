@@ -3,10 +3,12 @@ package com.example.yusaka.autobackuptest;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,12 +43,21 @@ public class MainActivity extends AppCompatActivity {
         new CopyTask().execute("c.zip");
       }
     });
+    findViewById(R.id.cpD).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        new CopyTask().execute("d.zip");
+      }
+    });
     findViewById(R.id.calcSum).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         new CalcChecksumTask().execute();
       }
     });
+    for (File f : getFilesDir().listFiles()) {
+      Log.d("hoge", f.getAbsolutePath());
+    }
   }
 
   private void copyFilesFromAssets(String fName){
@@ -55,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
       FileOutputStream fos = null;
       try {
         is = getAssets().open(fName);
-        fos = openFileOutput("file", MODE_PRIVATE);
+        fos = openFileOutput("stub_file", MODE_PRIVATE);
         byte[] buf = new byte[1024];
         int len;
         while ((len = is.read(buf)) >= 0) {
@@ -80,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     synchronized (LOCK) {
       FileInputStream fis = null;
       try {
-        fis = openFileInput("file");
+        fis = openFileInput("stub_file");
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] buf = new byte[1024];
         int len;
