@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -55,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
         new CalcChecksumTask().execute();
       }
     });
-    for (File f : getFilesDir().listFiles()) {
-      Log.d("hoge", f.getAbsolutePath());
-    }
   }
 
   private void copyFilesFromAssets(String fName){
@@ -99,13 +95,12 @@ public class MainActivity extends AppCompatActivity {
           md.update(buf, 0, len);
         }
         return String.format("%032X", new BigInteger(1, md.digest()));
-      } catch (NoSuchAlgorithmException | IOException e) {
-        e.printStackTrace();
+      } catch (NoSuchAlgorithmException | IOException ignore) {
       } finally {
         if (fis != null) {
           try {
             fis.close();
-          } catch (IOException e) {
+          } catch (IOException ignore) {
           }
         }
       }
